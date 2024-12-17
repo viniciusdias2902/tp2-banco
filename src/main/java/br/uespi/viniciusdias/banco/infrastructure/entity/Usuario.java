@@ -1,14 +1,11 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
 public class Usuario {
 
     @Id
@@ -33,4 +30,68 @@ public class Usuario {
     private List<Endereco> enderecos;
     @ManyToMany(mappedBy = "usuarios")
     private List<Conta> contas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public List<Telefone> getTelefones() {
+        return telefones;
+    }
+
+    public void setTelefones(List<Telefone> telefones) {
+        this.telefones = telefones;
+    }
+
+    public List<Endereco> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
+    }
+
+    public List<Conta> getContas() {
+        return contas;
+    }
+
+    public void setContas(List<Conta> contas) {
+        this.contas = contas;
+    }
 }

@@ -1,17 +1,11 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 public class Conta {
 
     @Id
@@ -41,4 +35,60 @@ public class Conta {
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNumeroConta() {
+        return numeroConta;
+    }
+
+    public void setNumeroConta(String numeroConta) {
+        this.numeroConta = numeroConta;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public Agencia getAgencia() {
+        return agencia;
+    }
+
+    public void setAgencia(Agencia agencia) {
+        this.agencia = agencia;
+    }
+
+    public List<Transacao> getTransacoes() {
+        return transacoes;
+    }
+
+    public void setTransacoes(List<Transacao> transacoes) {
+        this.transacoes = transacoes;
+    }
+
+    public List<Emprestimo> getEmprestimos() {
+        return emprestimos;
+    }
+
+    public void setEmprestimos(List<Emprestimo> emprestimos) {
+        this.emprestimos = emprestimos;
+    }
 }

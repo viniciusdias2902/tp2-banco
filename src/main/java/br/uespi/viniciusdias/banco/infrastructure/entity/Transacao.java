@@ -1,17 +1,12 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+
 public class Transacao {
 
     @Id
@@ -31,4 +26,36 @@ public class Transacao {
             inverseJoinColumns = @JoinColumn(name = "conta_id")
     )
     private List<Conta> contas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
+
+    public List<Conta> getContas() {
+        return contas;
+    }
+
+    public void setContas(List<Conta> contas) {
+        this.contas = contas;
+    }
 }

@@ -1,16 +1,10 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Agencia {
 
     @Id
@@ -25,4 +19,36 @@ public class Agencia {
 
     @OneToMany(mappedBy = "agencia", cascade = CascadeType.ALL)
     private List<Conta> contas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public List<Conta> getContas() {
+        return contas;
+    }
+
+    public void setContas(List<Conta> contas) {
+        this.contas = contas;
+    }
 }
