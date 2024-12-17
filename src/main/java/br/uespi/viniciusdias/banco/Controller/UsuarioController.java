@@ -2,6 +2,7 @@ package br.uespi.viniciusdias.banco.Controller;
 
 import br.uespi.viniciusdias.banco.infrastructure.entity.Usuario;
 import br.uespi.viniciusdias.banco.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping
-    public Usuario salvarUsuario(@RequestBody Usuario usuario) {
+    public Usuario salvarUsuario(@Valid @RequestBody Usuario usuario) {
         return usuarioService.salvarUsuario(usuario);
     }
 

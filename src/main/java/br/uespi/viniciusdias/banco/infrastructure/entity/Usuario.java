@@ -1,6 +1,7 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Usuario{
     private String email;
 
     @Column(nullable = false, unique = true)
+    @Pattern(regexp = "^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$", message = "CPF deve estar no formato XXX.XXX.XXX-XX")
     private String cpf;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
