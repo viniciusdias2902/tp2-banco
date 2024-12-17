@@ -91,4 +91,8 @@ public class Conta {
     public void setEmprestimos(List<Emprestimo> emprestimos) {
         this.emprestimos = emprestimos;
     }
+
+    public void setUsuario(Usuario usuario) {
+        usuarios.add(usuario);
+    }
 }
