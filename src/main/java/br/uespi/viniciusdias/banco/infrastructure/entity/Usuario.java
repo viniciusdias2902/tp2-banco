@@ -1,12 +1,10 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,4 +26,7 @@ public class Usuario {
 
     @Column(nullable = false, unique = true)
     private String cpf;
+
+    @OneToMany(mappedBy = "usuario")
+    private List<Telefone> telefones;
 }
