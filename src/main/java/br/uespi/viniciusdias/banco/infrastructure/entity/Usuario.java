@@ -2,11 +2,10 @@ package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
 
-
 import java.util.List;
 
 @Entity
-public class Usuario {
+public class Usuario{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
