@@ -63,4 +63,14 @@ public class ContaController {
         contaService.cancelarConta(id);
         return ResponseEntity.ok("Conta cancelada com sucesso.");
     }
+
+    @PutMapping("/{id}/emprestimos/{emprestimoId}/pagar")
+    public ResponseEntity<String> pagarEmprestimo(
+            @PathVariable Long id,
+            @PathVariable Long emprestimoId,
+            @RequestParam BigDecimal valorPago) {
+
+        contaService.pagarEmprestimo(id, emprestimoId, valorPago);
+        return ResponseEntity.ok("Pagamento do empréstimo realizado com sucesso.");
+    }
 }

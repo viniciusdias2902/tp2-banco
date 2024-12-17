@@ -1,19 +1,14 @@
 package br.uespi.viniciusdias.banco.service;
 
-import br.uespi.viniciusdias.banco.infrastructure.entity.Agencia;
-import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
-import br.uespi.viniciusdias.banco.infrastructure.entity.Transacao;
-import br.uespi.viniciusdias.banco.infrastructure.entity.Usuario;
-import br.uespi.viniciusdias.banco.infrastructure.repository.AgenciaRepository;
-import br.uespi.viniciusdias.banco.infrastructure.repository.ContaRepository;
-import br.uespi.viniciusdias.banco.infrastructure.repository.TransacaoRepository;
-import br.uespi.viniciusdias.banco.infrastructure.repository.UsuarioRepository;
+import br.uespi.viniciusdias.banco.infrastructure.entity.*;
+import br.uespi.viniciusdias.banco.infrastructure.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContaService {
@@ -29,6 +24,9 @@ public class ContaService {
 
     @Autowired
     private TransacaoRepository transacaoRepository;
+
+    @Autowired
+    private EmprestimoRepository emprestimoRepository;
 
     @Transactional
     public Conta criarConta(Long agenciaId, Long usuarioId, BigDecimal saldoInicial) {
@@ -92,21 +90,18 @@ public class ContaService {
             throw new IllegalArgumentException("Saldo insuficiente para realizar a transferência.");
         }
 
-        // Atualiza os saldos das contas
         contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
         contaDestino.setSaldo(contaDestino.getSaldo().add(valor));
 
         contaRepository.save(contaOrigem);
         contaRepository.save(contaDestino);
 
-        // Cria a transação para a conta de origem
         Transacao transacaoOrigem = new Transacao();
         transacaoOrigem.setDescricao("Transferência enviada: " + descricao);
         transacaoOrigem.setValor(valor.negate());
         transacaoOrigem.setConta(contaOrigem);
         transacaoRepository.save(transacaoOrigem);
 
-        // Cria a transação para a conta de destino
         Transacao transacaoDestino = new Transacao();
         transacaoDestino.setDescricao("Transferência recebida: " + descricao);
         transacaoDestino.setValor(valor);
@@ -134,5 +129,36 @@ public class ContaService {
     public Conta buscarContaPorId(Long id) {
         return contaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada com ID: " + id));
+    }
+
+    @Transactional
+    public void pagarEmprestimo(Long contaId, Long emprestimoId, BigDecimal valorPago) {
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId)
+                .orElseThrow(() -> new RuntimeException("Empréstimo não encontrado"));
+
+        if (!conta.getEmprestimos().contains(emprestimo)) {
+            throw new RuntimeException("Empréstimo não pertence a esta conta");
+        }
+
+        if (valorPago.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("O valor pago deve ser positivo");
+        }
+
+        BigDecimal valorRestante = emprestimo.getValor().subtract(emprestimo.getValorPago());
+        if (valorPago.compareTo(valorRestante) > 0) {
+            throw new RuntimeException("O valor pago excede o valor restante do empréstimo");
+        }
+
+        emprestimo.setValorPago(emprestimo.getValorPago().add(valorPago));
+        emprestimoRepository.save(emprestimo);
+
+        if (conta.getSaldo().compareTo(valorPago) < 0) {
+            throw new RuntimeException("Saldo insuficiente para pagar o empréstimo");
+        }
+        conta.setSaldo(conta.getSaldo().subtract(valorPago));
+        contaRepository.save(conta);
     }
 }
