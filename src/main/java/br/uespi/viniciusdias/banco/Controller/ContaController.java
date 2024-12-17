@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/contas")
@@ -23,29 +24,42 @@ public class ContaController {
         return ResponseEntity.ok(novaConta);
     }
 
-    @PostMapping("/{contaId}/depositar")
-    public ResponseEntity<Conta> depositar(@PathVariable Long contaId, @RequestParam BigDecimal valor) {
-        Conta contaAtualizada = contaService.depositar(contaId, valor);
+    @GetMapping
+    public ResponseEntity<List<Conta>> listarContas() {
+        List<Conta> contas = contaService.listarContas();
+        return ResponseEntity.ok(contas);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Conta> buscarContaPorId(@PathVariable Long id) {
+        Conta conta = contaService.buscarContaPorId(id);
+        return ResponseEntity.ok(conta);
+    }
+
+    @PutMapping("/{id}/depositar")
+    public ResponseEntity<Conta> depositar(@PathVariable Long id, @RequestParam BigDecimal valor) {
+        Conta contaAtualizada = contaService.depositar(id, valor);
         return ResponseEntity.ok(contaAtualizada);
     }
 
-    @PostMapping("/{contaId}/sacar")
-    public ResponseEntity<Conta> sacar(@PathVariable Long contaId, @RequestParam BigDecimal valor) {
-        Conta contaAtualizada = contaService.sacar(contaId, valor);
+    @PutMapping("/{id}/sacar")
+    public ResponseEntity<Conta> sacar(@PathVariable Long id, @RequestParam BigDecimal valor) {
+        Conta contaAtualizada = contaService.sacar(id, valor);
         return ResponseEntity.ok(contaAtualizada);
     }
 
-    @PostMapping("/transferir")
-    public ResponseEntity<String> transferir(@RequestParam Long contaOrigemId,
-                                             @RequestParam Long contaDestinoId,
-                                             @RequestParam BigDecimal valor) {
-        contaService.transferir(contaOrigemId, contaDestinoId, valor);
-        return ResponseEntity.ok("Transferência realizada com sucesso");
+    @PutMapping("/{id}/transferir")
+    public ResponseEntity<String> transferir(
+            @PathVariable Long id,
+            @RequestParam Long contaDestinoId,
+            @RequestParam BigDecimal valor) {
+        contaService.transferir(id, contaDestinoId, valor);
+        return ResponseEntity.ok("Transferência realizada com sucesso!");
     }
 
-    @DeleteMapping("/{contaId}/cancelar")
-    public ResponseEntity<String> cancelarConta(@PathVariable Long contaId) {
-        contaService.cancelarConta(contaId);
-        return ResponseEntity.ok("Conta cancelada com sucesso");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> cancelarConta(@PathVariable Long id) {
+        contaService.cancelarConta(id);
+        return ResponseEntity.ok("Conta cancelada com sucesso.");
     }
 }

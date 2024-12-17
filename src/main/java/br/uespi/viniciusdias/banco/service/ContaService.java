@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class ContaService {
@@ -111,5 +112,14 @@ public class ContaService {
         }
 
         contaRepository.delete(conta);
+    }
+
+    public List<Conta> listarContas() {
+        return contaRepository.findAll();
+    }
+
+    public Conta buscarContaPorId(Long id) {
+        return contaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada com ID: " + id));
     }
 }
