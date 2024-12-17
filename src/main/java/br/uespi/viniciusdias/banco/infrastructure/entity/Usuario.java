@@ -31,5 +31,6 @@ public class Usuario {
     private List<Telefone> telefones;
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Endereco> enderecos;
-
+    @ManyToMany(mappedBy = "usuarios")
+    private List<Conta> contas;
 }
