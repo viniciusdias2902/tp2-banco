@@ -25,6 +25,9 @@ public class Emprestimo {
     @Column(nullable = false)
     private BigDecimal taxaJuros;
 
+    @Column(nullable = false)
+    private boolean quitado = false;
+
     @ManyToOne
     @JoinColumn(name = "conta_id", nullable = false)
     private Conta conta;
@@ -75,5 +78,13 @@ public class Emprestimo {
 
     public void setConta(Conta conta) {
         this.conta = conta;
+    }
+
+    public boolean isQuitado() {
+        return quitado;
+    }
+
+    public void setQuitado(boolean quitado) {
+        this.quitado = quitado;
     }
 }
