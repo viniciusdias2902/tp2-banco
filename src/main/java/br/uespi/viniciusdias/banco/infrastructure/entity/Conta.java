@@ -38,4 +38,7 @@ public class Conta {
 
     @ManyToMany(mappedBy = "contas")
     private List<Transacao> transacoes;
+
+    @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
+    private List<Emprestimo> emprestimos;
 }
