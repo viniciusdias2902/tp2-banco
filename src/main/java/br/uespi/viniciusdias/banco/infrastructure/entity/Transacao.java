@@ -3,6 +3,7 @@ package br.uespi.viniciusdias.banco.infrastructure.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,5 +58,13 @@ public class Transacao {
 
     public void setContas(List<Conta> contas) {
         this.contas = contas;
+    }
+
+    public void setConta(Conta conta) {
+        if (contas == null) {
+            contas = new ArrayList<>();
+        }
+
+        contas.add((conta));
     }
 }

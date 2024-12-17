@@ -52,8 +52,9 @@ public class ContaController {
     public ResponseEntity<String> transferir(
             @PathVariable Long id,
             @RequestParam Long contaDestinoId,
-            @RequestParam BigDecimal valor) {
-        contaService.transferir(id, contaDestinoId, valor);
+            @RequestParam BigDecimal valor,
+            @RequestParam String descricao) {
+        contaService.transferir(id, contaDestinoId, valor, descricao);
         return ResponseEntity.ok("Transferência realizada com sucesso!");
     }
 

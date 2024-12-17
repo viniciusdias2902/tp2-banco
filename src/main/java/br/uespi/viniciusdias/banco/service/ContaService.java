@@ -2,9 +2,11 @@ package br.uespi.viniciusdias.banco.service;
 
 import br.uespi.viniciusdias.banco.infrastructure.entity.Agencia;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
+import br.uespi.viniciusdias.banco.infrastructure.entity.Transacao;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Usuario;
 import br.uespi.viniciusdias.banco.infrastructure.repository.AgenciaRepository;
 import br.uespi.viniciusdias.banco.infrastructure.repository.ContaRepository;
+import br.uespi.viniciusdias.banco.infrastructure.repository.TransacaoRepository;
 import br.uespi.viniciusdias.banco.infrastructure.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,10 @@ public class ContaService {
     private AgenciaRepository agenciaRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;  // Repositório de Usuário
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TransacaoRepository transacaoRepository;
 
     @Transactional
     public Conta criarConta(Long agenciaId, Long usuarioId, BigDecimal saldoInicial) {
@@ -79,26 +84,34 @@ public class ContaService {
     }
 
     @Transactional
-    public void transferir(Long contaOrigemId, Long contaDestinoId, BigDecimal valor) {
-        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("O valor da transferência deve ser maior que zero.");
-        }
-
-        Conta contaOrigem = contaRepository.findById(contaOrigemId)
-                .orElseThrow(() -> new RuntimeException("Conta origem não encontrada"));
-
-        Conta contaDestino = contaRepository.findById(contaDestinoId)
-                .orElseThrow(() -> new RuntimeException("Conta destino não encontrada"));
+    public void transferir(Long contaOrigemId, Long contaDestinoId, BigDecimal valor, String descricao) {
+        Conta contaOrigem = buscarContaPorId(contaOrigemId);
+        Conta contaDestino = buscarContaPorId(contaDestinoId);
 
         if (contaOrigem.getSaldo().compareTo(valor) < 0) {
-            throw new RuntimeException("Saldo insuficiente para transferência.");
+            throw new IllegalArgumentException("Saldo insuficiente para realizar a transferência.");
         }
 
+        // Atualiza os saldos das contas
         contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
         contaDestino.setSaldo(contaDestino.getSaldo().add(valor));
 
         contaRepository.save(contaOrigem);
         contaRepository.save(contaDestino);
+
+        // Cria a transação para a conta de origem
+        Transacao transacaoOrigem = new Transacao();
+        transacaoOrigem.setDescricao("Transferência enviada: " + descricao);
+        transacaoOrigem.setValor(valor.negate());
+        transacaoOrigem.setConta(contaOrigem);
+        transacaoRepository.save(transacaoOrigem);
+
+        // Cria a transação para a conta de destino
+        Transacao transacaoDestino = new Transacao();
+        transacaoDestino.setDescricao("Transferência recebida: " + descricao);
+        transacaoDestino.setValor(valor);
+        transacaoDestino.setConta(contaDestino);
+        transacaoRepository.save(transacaoDestino);
     }
 
     @Transactional
