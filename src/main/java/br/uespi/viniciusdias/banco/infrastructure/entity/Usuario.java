@@ -1,5 +1,8 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 
@@ -30,6 +33,7 @@ public class Usuario{
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Endereco> enderecos;
     @ManyToMany(mappedBy = "usuarios")
+    @JsonIgnore // To-do: dto pra corrigir a referência bidirecional infinita
     private List<Conta> contas;
 
     public Long getId() {

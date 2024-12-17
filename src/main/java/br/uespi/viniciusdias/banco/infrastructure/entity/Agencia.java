@@ -1,5 +1,6 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class Agencia {
     private String numero;
 
     @OneToMany(mappedBy = "agencia", cascade = CascadeType.ALL)
+    @JsonIgnore // To-do: dto pra corrigir a referência bidirecional infinita
     private List<Conta> contas;
 
     public Long getId() {

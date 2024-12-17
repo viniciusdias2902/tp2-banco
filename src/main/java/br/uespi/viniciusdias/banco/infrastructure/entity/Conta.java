@@ -1,7 +1,11 @@
 package br.uespi.viniciusdias.banco.infrastructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,6 +21,8 @@ public class Conta {
 
     @Column(nullable = false)
     private BigDecimal saldo;
+
+
 
     @ManyToMany
     @JoinTable(
@@ -35,6 +41,7 @@ public class Conta {
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)
     private List<Emprestimo> emprestimos;
+
 
     public Long getId() {
         return id;
@@ -93,6 +100,9 @@ public class Conta {
     }
 
     public void setUsuario(Usuario usuario) {
+        if (usuarios == null) {
+            usuarios = new ArrayList<>();
+        }
         usuarios.add(usuario);
     }
 }
