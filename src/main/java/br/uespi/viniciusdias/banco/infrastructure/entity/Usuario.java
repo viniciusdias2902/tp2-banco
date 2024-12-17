@@ -27,6 +27,9 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Telefone> telefones;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Endereco> enderecos;
+
 }
