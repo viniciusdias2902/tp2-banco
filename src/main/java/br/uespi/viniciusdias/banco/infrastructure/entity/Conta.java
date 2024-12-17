@@ -37,6 +37,7 @@ public class Conta {
     private Agencia agencia;
 
     @ManyToMany(mappedBy = "contas")
+    @JsonIgnore // To-do: dto pra corrigir a referência bidirecional infinita
     private List<Transacao> transacoes;
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL)

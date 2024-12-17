@@ -1,6 +1,7 @@
 package br.uespi.viniciusdias.banco.Controller;
 
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
+import br.uespi.viniciusdias.banco.infrastructure.entity.Emprestimo;
 import br.uespi.viniciusdias.banco.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -72,5 +73,21 @@ public class ContaController {
 
         contaService.pagarEmprestimo(id, emprestimoId, valorPago);
         return ResponseEntity.ok("Pagamento do empréstimo realizado com sucesso.");
+    }
+
+    @PostMapping("/{id}/emprestimos/solicitar")
+    public ResponseEntity<Emprestimo> pedirEmprestimo(
+            @PathVariable Long id,
+            @RequestParam BigDecimal valor,
+            @RequestParam BigDecimal taxaJuros) {
+
+        Emprestimo emprestimo = contaService.pedirEmprestimo(id, valor, taxaJuros);
+        return ResponseEntity.ok(emprestimo);
+    }
+
+    @GetMapping("/{id}/emprestimos")
+    public ResponseEntity<List<Emprestimo>> listarEmprestimos(@PathVariable Long id) {
+        List<Emprestimo> emprestimos = contaService.listarEmprestimos(id);
+        return ResponseEntity.ok(emprestimos);
     }
 }

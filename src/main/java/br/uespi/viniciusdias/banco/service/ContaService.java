@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -160,5 +161,28 @@ public class ContaService {
         }
         conta.setSaldo(conta.getSaldo().subtract(valorPago));
         contaRepository.save(conta);
+    }
+
+    public Emprestimo pedirEmprestimo(Long contaId, BigDecimal valor, BigDecimal taxaJuros) {
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        Emprestimo novoEmprestimo = new Emprestimo();
+        novoEmprestimo.setValor(valor);
+        novoEmprestimo.setValorPago(BigDecimal.ZERO);
+        novoEmprestimo.setTaxaJuros(taxaJuros);
+        novoEmprestimo.setData(LocalDate.now());
+        novoEmprestimo.setConta(conta);
+
+        emprestimoRepository.save(novoEmprestimo);
+
+        return novoEmprestimo;
+    }
+
+    public List<Emprestimo> listarEmprestimos(Long contaId) {
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        return conta.getEmprestimos();
     }
 }
