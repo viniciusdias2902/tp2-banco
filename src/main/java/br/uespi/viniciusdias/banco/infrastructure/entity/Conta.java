@@ -31,4 +31,8 @@ public class Conta {
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private List<Usuario> usuarios;
+
+    @ManyToOne
+    @JoinColumn(name = "agencia_id", nullable = false)
+    private Agencia agencia;
 }
