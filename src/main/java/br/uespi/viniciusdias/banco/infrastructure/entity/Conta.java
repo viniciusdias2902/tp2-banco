@@ -35,4 +35,7 @@ public class Conta {
     @ManyToOne
     @JoinColumn(name = "agencia_id", nullable = false)
     private Agencia agencia;
+
+    @ManyToMany(mappedBy = "contas")
+    private List<Transacao> transacoes;
 }
